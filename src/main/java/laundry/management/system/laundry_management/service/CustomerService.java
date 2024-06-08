@@ -5,6 +5,7 @@ import laundry.management.system.laundry_management.entity.Customers;
 import laundry.management.system.laundry_management.entity.User;
 import laundry.management.system.laundry_management.model.CreateCustomerRequest;
 import laundry.management.system.laundry_management.model.CustomerResponse;
+import laundry.management.system.laundry_management.model.UpdateCustomerRequest;
 import laundry.management.system.laundry_management.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +41,20 @@ public class CustomerService {
 	public CustomerResponse get(String id) {
 		Customers customers = customerRepository.findFirstById(id)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
+		
+		return toCustomerResponse(customers);
+	}
+	
+	@Transactional
+	public CustomerResponse update(String customersId, UpdateCustomerRequest request) {
+		validationService.validate(request);
+		
+		Customers customers = customerRepository.findFirstById(customersId)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
+		
+		customers.setName(request.getName());
+		customers.setPhoneNumber(request.getPhoneNumber());
+		customerRepository.save(customers);
 		
 		return toCustomerResponse(customers);
 	}

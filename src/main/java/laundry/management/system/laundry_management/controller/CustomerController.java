@@ -3,6 +3,7 @@ package laundry.management.system.laundry_management.controller;
 import laundry.management.system.laundry_management.entity.User;
 import laundry.management.system.laundry_management.model.CreateCustomerRequest;
 import laundry.management.system.laundry_management.model.CustomerResponse;
+import laundry.management.system.laundry_management.model.UpdateCustomerRequest;
 import laundry.management.system.laundry_management.model.WebResponse;
 import laundry.management.system.laundry_management.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,23 @@ public class CustomerController {
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	public WebResponse<CustomerResponse> get(@PathVariable("customersId") String customersId) {
-		System.out.println("CUSTOMER ID" + customersId);
 		CustomerResponse customerResponse = customerService.get(customersId);
+		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
+	}
+	
+	@PutMapping(
+		path = "/api/customers/{customersId}",
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<CustomerResponse> update(
+	 @RequestBody UpdateCustomerRequest request,
+	 @PathVariable("customersId") String customersId) {
+		
+		request.setName(request.getName());
+		request.setPhoneNumber(request.getPhoneNumber());
+		
+		CustomerResponse customerResponse = customerService.update(customersId, request);
 		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
 	}
 }
