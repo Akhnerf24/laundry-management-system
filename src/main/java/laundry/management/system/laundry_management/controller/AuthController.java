@@ -27,7 +27,6 @@ public class AuthController {
         return WebResponse.<TokenResponse>builder().data(tokenResponse).build();
     }
     
-    @Operation(summary = "Authentication Logout")
     @DeleteMapping(
             path = "/api/auth/logout",
             produces = MediaType.APPLICATION_JSON_VALUE
