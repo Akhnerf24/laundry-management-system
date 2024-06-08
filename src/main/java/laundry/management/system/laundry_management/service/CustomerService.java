@@ -1,13 +1,16 @@
 package laundry.management.system.laundry_management.service;
 
+import io.swagger.v3.oas.models.info.Contact;
 import laundry.management.system.laundry_management.entity.Customers;
 import laundry.management.system.laundry_management.entity.User;
 import laundry.management.system.laundry_management.model.CreateCustomerRequest;
 import laundry.management.system.laundry_management.model.CustomerResponse;
 import laundry.management.system.laundry_management.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 
@@ -29,6 +32,14 @@ public class CustomerService {
 		customers.setPhoneNumber(request.getPhoneNumber());
 		
 		customerRepository.save(customers);
+		
+		return toCustomerResponse(customers);
+	}
+	
+	@Transactional(readOnly = true)
+	public CustomerResponse get(String id) {
+		Customers customers = customerRepository.findFirstById(id)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
 		
 		return toCustomerResponse(customers);
 	}

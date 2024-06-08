@@ -7,9 +7,7 @@ import laundry.management.system.laundry_management.model.WebResponse;
 import laundry.management.system.laundry_management.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class CustomerController {
@@ -24,5 +22,15 @@ public class CustomerController {
 	public WebResponse<CustomerResponse> create(User user, @RequestBody CreateCustomerRequest request) {
 		CustomerResponse contactResponse = customerService.create(user, request);
 		return WebResponse.<CustomerResponse>builder().data(contactResponse).build();
+	}
+	
+	@GetMapping(
+		path = "/api/customers/{customersId}",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<CustomerResponse> get(@PathVariable("customersId") String customersId) {
+		System.out.println("CUSTOMER ID" + customersId);
+		CustomerResponse customerResponse = customerService.get(customersId);
+		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
 	}
 }
