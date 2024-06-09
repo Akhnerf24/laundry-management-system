@@ -2,7 +2,8 @@ package laundry.management.system.laundry_management.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,17 +18,32 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "Customers")
-public class Customers {
+@Table(name = "Transaction")
+public class Transaction {
 	@Id
-	private String id;
+	private String orderId;
 	
-	private String name;
+	private String cusName;
 	
 	@NotBlank
-	@Size(max = 100)
-	@Column(unique = true)
 	private String phoneNumber;
+	
+	@NotNull
+	private Double weight;
+	
+	@NotBlank
+	private String serviceType;
+	
+	@NotNull
+	private Boolean isPaid;
+	
+	private Boolean done = false;
+	
+	private Boolean pickedUp = false;
+	
+	private Date paidDate;
+	private Date doneDate;
+	private Date pickedUpDate;
 	
 	@CreationTimestamp
 	@Temporal(TemporalType.TIMESTAMP)

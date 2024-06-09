@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface CustomerRepository  extends JpaRepository<Customers, String> {
+public interface CustomerRepository extends JpaRepository<Customers, String> {
 	Optional<Customers> findFirstById(String id);
+	Optional<Customers> findFirstByPhoneNumber(String phoneNumber);
 }

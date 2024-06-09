@@ -1,0 +1,51 @@
+package laundry.management.system.laundry_management.controller;
+
+import laundry.management.system.laundry_management.entity.User;
+import laundry.management.system.laundry_management.model.*;
+import laundry.management.system.laundry_management.service.CustomerService;
+import laundry.management.system.laundry_management.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+public class TransactionController {
+	@Autowired
+	private TransactionService transactionService;
+	
+	@PostMapping(
+		path = "/api/create-order",
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<TransactionResponse> create(@RequestBody CreateTransactionRequest request) {
+		TransactionResponse transactionResponse = transactionService.create(request);
+		return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
+	}
+	
+	@GetMapping(
+		path = "/api/get-order-detail/{orderId}",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<TransactionResponse> get(@PathVariable("orderId") String orderId) {
+		TransactionResponse transactionResponse = transactionService.get(orderId);
+		return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
+	}
+	
+	@PutMapping(
+		path = "/api/update-order/{orderId}",
+		consumes = MediaType.APPLICATION_JSON_VALUE,
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<TransactionResponse> update(
+		@RequestBody UpdateTransactionRequest request,
+		@PathVariable("orderId") String orderId) {
+		
+		request.setPaidStatus(request.getPaidStatus());
+		request.setDone(request.getDone());
+		request.setPickedUp(request.getPickedUp());
+		
+		TransactionResponse transactionResponse = transactionService.update(orderId, request);
+		return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
+	}
+}
