@@ -52,6 +52,15 @@ public class CustomerController {
 		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
 	}
 	
+	@DeleteMapping(
+		path = "/api/customers/{customerId}",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<String> delete(User user, @PathVariable("customerId") String customerId) {
+		customerService.delete(customerId);
+		return WebResponse.<String>builder().data("Berhasil Menghapus Data").build();
+	}
+	
 	@GetMapping("/api/customers/paginate")
 	public Page<Customers> getCustomers(
 		@RequestParam(defaultValue = "0") int page,

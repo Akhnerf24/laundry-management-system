@@ -63,6 +63,14 @@ public class CustomerService {
 		return toCustomerResponse(customers);
 	}
 	
+	@Transactional
+	public void delete(String customerId) {
+		Customers customers = customerRepository.findFirstById(customerId)
+			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
+		
+		customerRepository.delete(customers);
+	}
+	
 	public Page<Customers> findPaginatedCustomers(int page, int size, String sortField, String sortDirection) {
 		Sort sort = Sort.by(sortField);
 		sort = "asc".equalsIgnoreCase(sortDirection) ? sort.ascending() : sort.descending();
