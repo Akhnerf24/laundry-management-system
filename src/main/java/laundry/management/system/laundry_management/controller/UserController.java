@@ -2,10 +2,7 @@ package laundry.management.system.laundry_management.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import laundry.management.system.laundry_management.entity.User;
-import laundry.management.system.laundry_management.model.RegisterUserRequest;
-import laundry.management.system.laundry_management.model.UpdateUserRequest;
-import laundry.management.system.laundry_management.model.UserResponse;
-import laundry.management.system.laundry_management.model.WebResponse;
+import laundry.management.system.laundry_management.model.*;
 import laundry.management.system.laundry_management.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
