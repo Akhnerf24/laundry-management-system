@@ -1,10 +1,13 @@
 package laundry.management.system.laundry_management.controller;
 
+import laundry.management.system.laundry_management.entity.Customers;
+import laundry.management.system.laundry_management.entity.Transaction;
 import laundry.management.system.laundry_management.entity.User;
 import laundry.management.system.laundry_management.model.*;
 import laundry.management.system.laundry_management.service.CustomerService;
 import laundry.management.system.laundry_management.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,5 +50,17 @@ public class TransactionController {
 		
 		TransactionResponse transactionResponse = transactionService.update(orderId, request);
 		return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
+	}
+	
+	@GetMapping("/api/get-order/paginate")
+	public Page<Transaction> getCustomers(
+		@RequestParam(defaultValue = "0") int page,
+		@RequestParam(defaultValue = "10") int size,
+		@RequestParam(defaultValue = "orderId") String sortField,
+		@RequestParam(defaultValue = "asc") String sortDirection,
+		@RequestParam(required = false) Long orderId,
+		@RequestParam(required = false) String cusName,
+		@RequestParam(required = false) String phoneNumber){
+		return transactionService.findPaginatedTransaction(page, size, sortField, sortDirection, orderId, cusName, phoneNumber);
 	}
 }

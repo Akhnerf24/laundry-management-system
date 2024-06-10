@@ -7,6 +7,10 @@ import laundry.management.system.laundry_management.model.*;
 import laundry.management.system.laundry_management.repository.CustomerRepository;
 import laundry.management.system.laundry_management.repository.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -122,6 +126,25 @@ public class TransactionService {
 		transactionRepository.save(transaction);
 		
 		return toTransactionResponse(transaction);
+	}
+	
+	public Page<Transaction> findPaginatedTransaction(
+		Integer page, Integer size, String sortField, String sortDirection,
+		Long orderId, String cusName, String phoneNumber
+	) {
+		Sort sort = Sort.by(sortField);
+		sort = "asc".equalsIgnoreCase(sortDirection) ? sort.ascending() : sort.descending();
+		Pageable pageable = PageRequest.of(page, size, sort);
+		
+		if (orderId != null) {
+			return transactionRepository.searchByOrderId(orderId, pageable);
+		} else if (cusName != null && !cusName.isEmpty()) {
+			return transactionRepository.searchByCusName(cusName, pageable);
+		} else if (phoneNumber != null && !phoneNumber.isEmpty()) {
+			return transactionRepository.searchByPhoneNumber(phoneNumber, pageable);
+		} else {
+			return transactionRepository.findAll(pageable);
+		}
 	}
 	
 	private TransactionResponse toTransactionResponse(Transaction transaction) {
