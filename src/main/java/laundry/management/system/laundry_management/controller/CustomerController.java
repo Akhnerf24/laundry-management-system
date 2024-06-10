@@ -66,7 +66,9 @@ public class CustomerController {
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(defaultValue = "id") String sortField,
-		@RequestParam(defaultValue = "asc") String sortDirection){
-		return customerService.findPaginatedCustomers(page, size, sortField, sortDirection);
+		@RequestParam(defaultValue = "asc") String sortDirection,
+		@RequestParam(required = false) String name,
+		@RequestParam(required = false) String phoneNumber){
+		return customerService.findPaginatedCustomers(page, size, sortField, sortDirection, name, phoneNumber);
 	}
 }

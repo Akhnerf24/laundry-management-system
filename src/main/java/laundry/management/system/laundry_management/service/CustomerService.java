@@ -71,11 +71,18 @@ public class CustomerService {
 		customerRepository.delete(customers);
 	}
 	
-	public Page<Customers> findPaginatedCustomers(int page, int size, String sortField, String sortDirection) {
+	public Page<Customers> findPaginatedCustomers(int page, int size, String sortField, String sortDirection, String name, String phoneNumber) {
 		Sort sort = Sort.by(sortField);
 		sort = "asc".equalsIgnoreCase(sortDirection) ? sort.ascending() : sort.descending();
 		Pageable pageable = PageRequest.of(page, size, sort);
-		return customerRepository.findAll(pageable);
+		
+		if (phoneNumber != null && !name.isEmpty()) {
+			return customerRepository.searchByName(name, pageable);
+		} else if (phoneNumber != null && !phoneNumber.isEmpty()) {
+			return customerRepository.searchByPhoneNumber(phoneNumber, pageable);
+		} else {
+			return customerRepository.findAll(pageable);
+		}
 	}
 	
 	private CustomerResponse toCustomerResponse(Customers customers) {
