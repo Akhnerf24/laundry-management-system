@@ -71,6 +71,16 @@ public class TransactionService {
 		return toTransactionResponse(transaction);
 	}
 	
+	public CountResponse getOnProgress() {
+		Long counting = transactionRepository.countByDoneTrue();
+		return toCountResponse(counting);
+	}
+	
+	public CountResponse getPickUp() {
+		Long counting = transactionRepository.countByPendingPickedUp();
+		return toCountResponse(counting);
+	}
+	
 	@Transactional
 	public TransactionResponse update(String orderId, UpdateTransactionRequest request) {
 		LocalDateTime currentDateTime = LocalDateTime.now();
@@ -160,6 +170,12 @@ public class TransactionService {
 			.paidDate(transaction.getPaidDate())
 			.doneDate(transaction.getDoneDate())
 			.pickedUpDate(transaction.getPickedUpDate())
+			.build();
+	}
+	
+	private CountResponse toCountResponse(Long counting) {
+		return CountResponse.builder()
+			.total(counting)
 			.build();
 	}
 }

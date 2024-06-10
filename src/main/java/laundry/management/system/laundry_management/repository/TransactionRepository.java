@@ -13,6 +13,12 @@ import java.util.Optional;
 public interface TransactionRepository extends JpaRepository<Transaction, String> {
 	Optional<Transaction> findFirstByOrderId(String orderId);
 	
+	@Query("SELECT COUNT(t) FROM Transaction t WHERE t.done = false")
+	long countByDoneTrue();
+	
+	@Query("SELECT COUNT(t) FROM Transaction t WHERE t.pickedUp = false and t.done = true")
+	long countByPendingPickedUp();
+	
 	@Query("SELECT t FROM Transaction t WHERE t.orderId = :orderId")
 	Page<Transaction> searchByOrderId(@Param("orderId") Long orderId, Pageable pageable);
 	

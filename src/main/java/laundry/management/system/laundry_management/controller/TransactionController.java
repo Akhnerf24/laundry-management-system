@@ -35,6 +35,24 @@ public class TransactionController {
 		return WebResponse.<TransactionResponse>builder().data(transactionResponse).build();
 	}
 	
+	@GetMapping(
+		path = "/api/get-onProgress-order",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<CountResponse> getCountOnProgress() {
+		CountResponse countResponse = transactionService.getOnProgress();
+		return WebResponse.<CountResponse>builder().data(countResponse).build();
+	}
+	
+	@GetMapping(
+		path = "/api/get-pickedUp-order",
+		produces = MediaType.APPLICATION_JSON_VALUE
+	)
+	public WebResponse<CountResponse> getCountPickUp() {
+		CountResponse countResponse = transactionService.getPickUp();
+		return WebResponse.<CountResponse>builder().data(countResponse).build();
+	}
+	
 	@PutMapping(
 		path = "/api/update-order/{orderId}",
 		consumes = MediaType.APPLICATION_JSON_VALUE,
