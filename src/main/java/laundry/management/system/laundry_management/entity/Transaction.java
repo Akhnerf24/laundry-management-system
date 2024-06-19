@@ -37,6 +37,11 @@ public class Transaction {
 	@NotBlank
 	private String serviceType;
 	
+	@NotBlank
+	private String telegramChatId;
+	
+	private Boolean isIdTelegramExist;
+	
 	@NotNull
 	private Boolean isPaid;
 	

@@ -62,6 +62,7 @@ public class TransactionController {
 		@RequestBody UpdateTransactionRequest request,
 		@PathVariable("orderId") String orderId) {
 		
+		request.setIsThereChatId(request.getIsThereChatId());
 		request.setPaidStatus(request.getPaidStatus());
 		request.setDone(request.getDone());
 		request.setPickedUp(request.getPickedUp());

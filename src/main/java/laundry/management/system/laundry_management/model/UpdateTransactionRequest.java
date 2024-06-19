@@ -17,4 +17,5 @@ public class UpdateTransactionRequest {
 	private Boolean paidStatus;
 	private Boolean done;
 	private Boolean pickedUp;
+	private Boolean isThereChatId;
 }
