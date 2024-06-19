@@ -42,7 +42,7 @@ public class CustomerService {
 	}
 	
 	@Transactional(readOnly = true)
-	public CustomerResponse get(String id) {
+	public CustomerResponse get(User user, String id) {
 		Customers customers = customerRepository.findFirstById(id)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
 		
@@ -50,7 +50,7 @@ public class CustomerService {
 	}
 	
 	@Transactional
-	public CustomerResponse update(String customersId, UpdateCustomerRequest request) {
+	public CustomerResponse update(User user, String customersId, UpdateCustomerRequest request) {
 		validationService.validate(request);
 		
 		Customers customers = customerRepository.findFirstById(customersId)
@@ -64,14 +64,14 @@ public class CustomerService {
 	}
 	
 	@Transactional
-	public void delete(String customerId) {
+	public void delete(User user, String customerId) {
 		Customers customers = customerRepository.findFirstById(customerId)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customers not found"));
 		
 		customerRepository.delete(customers);
 	}
 	
-	public Page<Customers> findPaginatedCustomers(int page, int size, String sortField, String sortDirection, String name, String phoneNumber) {
+	public Page<Customers> findPaginatedCustomers(User user, int page, int size, String sortField, String sortDirection, String name, String phoneNumber) {
 		Sort sort = Sort.by(sortField);
 		sort = "asc".equalsIgnoreCase(sortDirection) ? sort.ascending() : sort.descending();
 		Pageable pageable = PageRequest.of(page, size, sort);

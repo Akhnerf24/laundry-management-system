@@ -1,5 +1,6 @@
 package laundry.management.system.laundry_management.service;
 
+import laundry.management.system.laundry_management.constant.Price;
 import laundry.management.system.laundry_management.entity.Customers;
 import laundry.management.system.laundry_management.entity.Transaction;
 import laundry.management.system.laundry_management.entity.User;
@@ -52,6 +53,7 @@ public class TransactionService {
 		transaction.setWeight(request.getWeight());
 		transaction.setServiceType(request.getServiceType());
 		transaction.setIsPaid(request.getPaidStatus());
+		transaction.setTotalPrice((int) (Price.PRICE_KG * request.getWeight()));
 		
 		if(request.getPaidStatus()){
 			transaction.setPaidDate(date);
@@ -164,6 +166,7 @@ public class TransactionService {
 			.phoneNumber(transaction.getPhoneNumber())
 			.serviceType(transaction.getServiceType())
 			.weight(transaction.getWeight())
+			.totalPrice(transaction.getTotalPrice())
 			.isPaid(transaction.getIsPaid())
 			.done(transaction.getDone())
 			.pickedUp(transaction.getPickedUp())

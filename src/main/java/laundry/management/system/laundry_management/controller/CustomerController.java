@@ -31,8 +31,8 @@ public class CustomerController {
 		path = "/api/customers/{customersId}",
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
-	public WebResponse<CustomerResponse> get(@PathVariable("customersId") String customersId) {
-		CustomerResponse customerResponse = customerService.get(customersId);
+	public WebResponse<CustomerResponse> get(User user, @PathVariable("customersId") String customersId) {
+		CustomerResponse customerResponse = customerService.get(user, customersId);
 		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
 	}
 	
@@ -42,13 +42,14 @@ public class CustomerController {
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	public WebResponse<CustomerResponse> update(
+	User user,
 	 @RequestBody UpdateCustomerRequest request,
 	 @PathVariable("customersId") String customersId) {
 		
 		request.setName(request.getName());
 		request.setPhoneNumber(request.getPhoneNumber());
 		
-		CustomerResponse customerResponse = customerService.update(customersId, request);
+		CustomerResponse customerResponse = customerService.update(user, customersId, request);
 		return WebResponse.<CustomerResponse>builder().data(customerResponse).build();
 	}
 	
@@ -57,18 +58,19 @@ public class CustomerController {
 		produces = MediaType.APPLICATION_JSON_VALUE
 	)
 	public WebResponse<String> delete(User user, @PathVariable("customerId") String customerId) {
-		customerService.delete(customerId);
+		customerService.delete(user, customerId);
 		return WebResponse.<String>builder().data("Berhasil Menghapus Data").build();
 	}
 	
 	@GetMapping("/api/customers/paginate")
 	public Page<Customers> getCustomers(
+		User user,
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size,
 		@RequestParam(defaultValue = "id") String sortField,
 		@RequestParam(defaultValue = "asc") String sortDirection,
 		@RequestParam(required = false) String name,
 		@RequestParam(required = false) String phoneNumber){
-		return customerService.findPaginatedCustomers(page, size, sortField, sortDirection, name, phoneNumber);
+		return customerService.findPaginatedCustomers(user, page, size, sortField, sortDirection, name, phoneNumber);
 	}
 }

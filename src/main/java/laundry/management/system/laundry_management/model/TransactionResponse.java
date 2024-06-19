@@ -16,6 +16,7 @@ public class TransactionResponse {
 	private String name;
 	private String phoneNumber;
 	private Double weight;
+	private Integer totalPrice;
 	private String serviceType;
 	private Boolean isPaid;
 	private Boolean done;

@@ -31,6 +31,9 @@ public class Transaction {
 	@NotNull
 	private Double weight;
 	
+	@NotNull
+	private Integer totalPrice;
+	
 	@NotBlank
 	private String serviceType;
 	
