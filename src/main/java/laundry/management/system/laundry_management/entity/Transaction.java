@@ -31,16 +31,14 @@ public class Transaction {
 	@NotNull
 	private Double weight;
 	
-	@NotNull
 	private Integer totalPrice;
 	
 	@NotBlank
 	private String serviceType;
 	
-	@NotBlank
 	private String telegramChatId;
 	
-	private Boolean isIdTelegramExist;
+	private Boolean isIdTelegramExist = false;
 	
 	@NotNull
 	private Boolean isPaid;

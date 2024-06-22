@@ -1,7 +1,6 @@
 package laundry.management.system.laundry_management.controller;
 
 import laundry.management.system.laundry_management.model.TelegramResponse;
-import laundry.management.system.laundry_management.model.TransactionResponse;
 import laundry.management.system.laundry_management.service.TelegramService;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +17,9 @@ public class TelegramController {
 	}
 	
 	@GetMapping("/send-telegram-message")
-	public String sendTelegramMessage(@RequestParam String orderId) {
-		telegramService.sendMessage(orderId);
-		return "Message sent!";
+	public TelegramResponse sendTelegramMessage(@RequestParam String orderId) {
+		System.out.println("DEBUG contrller");
+		return telegramService.sendMessage(orderId);
 	}
 	
 	@GetMapping("/getChatId")

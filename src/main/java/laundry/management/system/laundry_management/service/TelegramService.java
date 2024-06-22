@@ -68,12 +68,49 @@ public class TelegramService {
 		return null; // or throw an exception if not found
 	}
 	
-	public void sendMessage(String orderId) {
-		String message = null;
+	public TelegramResponse sendMessage(String orderId) {
+		System.out.println("DEBUG 2321");
+		String sendMessage = null;
 		
 		Transaction transaction = transactionRepository.findFirstByOrderId(orderId)
 			.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Transaction not found"));
 		
+		if (!transaction.getIsIdTelegramExist()){
+			JsonNode updates = getUpdates();
+			try{
+				System.out.println("DEBUG 2324");
+				if (updates != null && updates.has("result")) {
+					System.out.println("DEBUG 2325");
+					for (JsonNode update : updates.get("result")) {
+						System.out.println("DEBUG 2326");
+						JsonNode message = update.get("message");
+						if (message != null) {
+							System.out.println("DEBUG 2327");
+							JsonNode from = message.get("from");
+							if (from != null && transaction.getCusName().equals(from.get("username").asText())) {
+								System.out.println("DEBUG 2318");
+								Long telegramChatId = message.get("chat").get("id").asLong();
+								
+								// Insert Telegram Chat ID
+								transaction.setIsIdTelegramExist(true);
+								transaction.setTelegramChatId(String.valueOf(telegramChatId));
+								transactionRepository.save(transaction);
+								
+								/*return toTelegramResponse(transaction);*/
+							}
+						}
+					}
+				}
+			} catch (Exception e){
+				System.out.println("DEBUG 2322");
+				transaction.setIsIdTelegramExist(false);
+				transactionRepository.save(transaction);
+				
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Data not found");
+			}
+		}
+		
+		System.out.println("DEBUG 2323");
 		String url = "https://api.telegram.org/bot" + botToken + "/sendMessage";
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -90,11 +127,11 @@ public class TelegramService {
 			+ "FreshFold Management";
 		
 		// Append the additional message to the original message
-		message =header + "\n\n" + multilineMessage; // Assuming 'message' is your original message
+		sendMessage =header + "\n\n" + multilineMessage; // Assuming 'message' is your original message
 		
 		Map<String, Object> body = new HashMap<>();
 		body.put("chat_id", transaction.getTelegramChatId());
-		body.put("text", message);
+		body.put("text", sendMessage);
 		
 		HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
 		ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
@@ -102,6 +139,8 @@ public class TelegramService {
 		if (!response.getStatusCode().is2xxSuccessful()) {
 			throw new RuntimeException("Failed to send message: " + response.getBody());
 		}
+		
+		return toTelegramResponse(transaction);
 	}
 	
 	private TelegramResponse toTelegramResponse(Transaction transaction) {
